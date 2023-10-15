@@ -36,9 +36,9 @@ class Phone(Field):
 
 
 class Record:
-    def __init__(self, name: str):
+    def __init__(self, name: str, phone: str = None):
         self.name = Name(name)
-        self.phones = []
+        self.phones = [Phone(phone)] if phone else [] 
 
     def add_phone(self, phone: str):
         self.phone = phone
@@ -87,6 +87,7 @@ class AddressBook(UserDict):
 
     def add_record(self, new_record: Record) -> None:
         self.data[new_record.name.value] = new_record
+        return f"Contact {new_record.name.value} add succefully!"
 
     # Створення нової адресної книги
 
@@ -160,6 +161,8 @@ def input_error(func):
             retcode = "Unkwown person, try again"
         except ValueError:
             retcode = "The phone number must consist of numbers!"
+        except IndexError:
+            retcode = "Insufficient parameters for the command!"
 
         return retcode
 
@@ -177,8 +180,11 @@ def normalize(number: str) -> str:
 
 @input_error
 def add_number(*args) -> str:
-    book.add_record(forming_record(*args))
-    return f"Abonent added succefully!"
+    name = args[0]
+    phone = args[1]
+    rec = Record(name, phone)
+    return book.add_record(rec)
+    # return f"Abonent added succefully!"
 
 @input_error
 def add_phone(*args) -> str:
