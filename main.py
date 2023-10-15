@@ -2,7 +2,6 @@
 -----------------------------
 you can use command below:
 add <name> <phone number>       - add new record to the phonebook
-add phone <name> <phone number> - add new number for <name>
 change <name> <phone number>    - change record into phonebook
 phone <name> <phone number>     - show phone number for name
 delete <name>                   - delete user <name> from phonebook
@@ -83,6 +82,9 @@ class AddressBook(UserDict):
         self.data[new_record.name.value] = new_record
         return f"Contact {new_record.name.value} add succefully!"
 
+    def __getitem__(self, key: str) -> Record:
+        return self.data[key]
+
 
 book = AddressBook()
 
@@ -139,17 +141,12 @@ def normalize(number: str) -> str:
 def add_number(*args) -> str:
     name = find_name(*args)
     phone = args[-1]
-    rec = Record(name, phone)
-    book.add_record(rec)
+    if name in book:
+        book[name].phones.append(Phone(phone))
+    else:
+        rec = Record(name, phone)
+        book.add_record(rec)
     return f"Abonent added succefully!"
-
-
-@input_error
-def add_phone(*args) -> str:
-    name = find_name(*args[:-1])
-    record = book.find(name)
-    record.add_phone(args[-1])
-    return f"Phone number added succefully!"
 
 
 @input_error
@@ -207,9 +204,6 @@ COMMANDS = {
 def parser(command: str) -> str:
     if command.lower().startswith("show all"):
         return show_all()
-
-    if command.lower().startswith("add phone"):
-        return add_phone(*command.split()[2:])
 
     if command.lower().startswith(("good bye", "close", "exit")):
         with open(data_pb, "w") as pb:
