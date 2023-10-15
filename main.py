@@ -231,7 +231,7 @@ def main():
         command = input("Enter your command > ")
         ret_code = parser(command)
         if ret_code == "Good bye!":
-            print("Good bye!")
+            print("Good bye, and have a nice day!")
             break
         else:
             print(ret_code)
