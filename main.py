@@ -161,7 +161,7 @@ def change_number(*args) -> str:
 
 
 @input_error
-def phone(*args) -> str:
+def find_phone(*args) -> str:
     name = find_name(*args)
     record = book.find(name)
     found_phone = record.find_phone(args[-1])
@@ -197,7 +197,7 @@ COMMANDS = {
     "add": add_number,
     "change": change_number,
     "show all": show_all,
-    "phone": phone,
+    "phone": find_phone,
     "delete": delete,
     "hello": hello,
     "help": help,
